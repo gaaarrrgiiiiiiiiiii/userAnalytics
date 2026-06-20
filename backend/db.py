@@ -14,7 +14,11 @@ if not MONGODB_URI:
     raise RuntimeError("MONGODB_URI is not set. Check your .env file.")
 
 client = MongoClient(MONGODB_URI)
-db = client.get_database()   # database name comes from the URI string
+# Use DB name from URI if present, otherwise fall back to "useranalytics"
+try:
+    db = client.get_database()
+except Exception:
+    db = client["useranalytics"]
 events_col = db["events"]
 
 # ── Indexes (idempotent — safe to call multiple times) ──────────────────── #
