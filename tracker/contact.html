@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescendo — Contact Us</title>
+  <link rel="stylesheet" href="styles.css?v=1781994857.6181934" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">CRESCENDO</a>
+    <div class="nav-links">
+      <a href="index.html" data-track="nav_home">Home</a>
+      <a href="products.html" data-track="nav_products">Products</a>
+      <a href="about.html" data-track="nav_about">About</a>
+      <a href="contact.html" class="active" data-track="nav_contact">Find us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart" id="cart-link" data-track="nav_cart"><i data-lucide="shopping-cart" style="width:16px;height:16px;"></i> <span id="cart-count">0</span></a>
+      <a href="products.html" class="nav-btn" data-track="nav_buy_template">Buy Template</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>Contact Us</h1>
+      <p>Have a question, feedback, or need support? Fill out the form and we'll get back to you within 24 hours.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;flex-wrap:wrap;">
+
+      <!-- Form -->
+      <div class="form-card">
+        <form id="contact-form" name="contact" novalidate>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject">
+              <option value="">Select a topic…</option>
+              <option value="order">Order Inquiry</option>
+              <option value="return">Return / Refund</option>
+              <option value="product">Product Question</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us how we can help…" required></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%" data-track="contact_submit">Send Message</button>
+        </form>
+      </div>
+
+      <!-- Contact info -->
+      <div>
+        <div class="product-card" style="margin-bottom:16px;">
+          <div style="margin-bottom:8px;"><i data-lucide="mail" style="width:28px;height:28px;stroke:var(--accent);"></i></div>
+          <p style="font-weight:700;margin-bottom:4px;color:var(--text);">Email</p>
+          <p style="color:var(--muted);font-size:0.875rem;">support@crescendo.demo</p>
+        </div>
+        <div class="product-card" style="margin-bottom:16px;">
+          <div style="margin-bottom:8px;"><i data-lucide="phone" style="width:28px;height:28px;stroke:var(--accent);"></i></div>
+          <p style="font-weight:700;margin-bottom:4px;color:var(--text);">Phone</p>
+          <p style="color:var(--muted);font-size:0.875rem;">+91 98765 43210</p>
+        </div>
+        <div class="product-card">
+          <div style="margin-bottom:8px;"><i data-lucide="clock" style="width:28px;height:28px;stroke:var(--accent);"></i></div>
+          <p style="font-weight:700;margin-bottom:4px;color:var(--text);">Working Hours</p>
+          <p style="color:var(--muted);font-size:0.875rem;">Mon–Fri, 9 AM – 6 PM IST</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 Crescendo Demo</p>
+    <div style="color:var(--muted);font-size:0.8rem;">
+      Built with ♥ for the CausalFunnel Assignment
+    </div>
+  </footer>
+
+  <div id="tracker-badge"><i data-lucide="activity"></i> Analytics Active</div>
+  <div id="toast"></div>
+
+  <script>
+    // Cart count
+    const cart = JSON.parse(localStorage.getItem("cf_cart") || "[]");
+    document.getElementById("cart-count").textContent = cart.length;
+
+    function showToast(msg, color) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      if (color) t.style.background = color;
+      t.classList.add("show");
+      setTimeout(() => { t.classList.remove("show"); t.style.background = ""; }, 3000);
+    }
+
+    document.getElementById("contact-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name  = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const msg   = document.getElementById("message").value.trim();
+
+      if (!name || !email || !msg) {
+        showToast("⚠️ Please fill in all required fields.", "#f59e0b");
+        return;
+      }
+
+      showToast("✅ Message sent! We'll reply within 24 hours.");
+      this.reset();
+    });
+  </script>
+
+  <script src="cf-analytics.js" data-api-url="http://localhost:5000"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

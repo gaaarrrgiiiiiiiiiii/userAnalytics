@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: useranalytics_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: useranalytics_backend
+    ports:
+      - "5000:5000"
+    environment:
+      # Connect to the mongodb service defined above
+      - MONGODB_URI=mongodb://mongodb:27017/useranalytics
+      - CORS_ORIGIN=*
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  frontend:
+    build: ./dashboard
+    container_name: useranalytics_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # The tracker and the frontend browser need to reach the backend via localhost
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      # Server components inside the Docker network must route to the backend container name
+      - INTERNAL_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  demo-site:
+    image: nginx:alpine
+    container_name: useranalytics_demo
+    ports:
+      - "8080:80"
+    volumes:
+      - ./tracker:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+

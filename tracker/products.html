@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescendo — Products</title>
+  <link rel="stylesheet" href="styles.css?v=1781994857.6181934" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">CRESCENDO</a>
+    <div class="nav-links">
+      <a href="index.html" data-track="nav_home">Home</a>
+      <a href="products.html" class="active" data-track="nav_products">Products</a>
+      <a href="about.html" data-track="nav_about">About</a>
+      <a href="contact.html" data-track="nav_contact">Find us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart active" id="cart-link" data-track="nav_cart"><i data-lucide="shopping-cart" style="width:16px;height:16px;"></i> <span id="cart-count">0</span></a>
+      <a href="products.html" class="nav-btn" data-track="nav_buy_template">Buy Template</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>All Products</h1>
+      <p>Premium audio gadgets for your setup. Click any product to track your journey.</p>
+    </div>
+
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+
+  <footer>
+    <p>© 2024 Crescendo Demo</p>
+    <div style="color:var(--muted);font-size:0.8rem;">
+      Built with ♥ for the CausalFunnel Assignment
+    </div>
+  </footer>
+
+  <div id="tracker-badge"><i data-lucide="activity"></i> Analytics Active</div>
+  <div id="toast"></div>
+
+  <script>
+    const PRODUCTS = [
+      { name: "Controller",            category: "Gaming",       price: "$ 270.00 USD", img: "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=400&q=80&fit=crop" },
+      { name: "Pro X168A",             category: "Headphones",   price: "$ 250.00 USD", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80&fit=crop" },
+      { name: "Speaker P168A",         category: "Speakers",     price: "$ 240.00 USD", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80&fit=crop" },
+      { name: "Wireless Charger 1",    category: "Accessories",  price: "$ 49.99 USD",  img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80&fit=crop" },
+      { name: "Wireless Mouse",        category: "Technology",   price: "$ 49.99 USD",  img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&q=80&fit=crop" },
+      { name: "Noise-Cancelling Headset", category: "Headphones", price: "$ 89.99 USD", img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80&fit=crop" },
+      { name: "Smart Speaker",         category: "Audio",        price: "$ 69.99 USD",  img: "https://images.unsplash.com/photo-1589003077984-894e133dabab?w=400&q=80&fit=crop" },
+      { name: "USB-C Hub",             category: "Accessories",  price: "$ 29.99 USD",  img: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&q=80&fit=crop" },
+    ];
+
+    let cart = JSON.parse(localStorage.getItem("cf_cart") || "[]");
+    function updateCartCount() {
+      document.getElementById("cart-count").textContent = cart.length;
+    }
+    updateCartCount();
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    function addCart(name, price, img) {
+      cart.push({ name, price, img });
+      localStorage.setItem("cf_cart", JSON.stringify(cart));
+      updateCartCount();
+      showToast(name + " added to cart!");
+    }
+
+    function buyNow(name, price, img) {
+      cart.push({ name, price, img });
+      localStorage.setItem("cf_cart", JSON.stringify(cart));
+      window.location.href = "cart.html";
+    }
+
+    const grid = document.getElementById("products-grid");
+    PRODUCTS.forEach(function(p) {
+      const trackName = p.name.replace(/ /g, '_');
+      const imgEscaped = p.img.replace(/'/g, "\\'");
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.name}" class="product-bg-img" />
+        <div class="product-gradient"></div>
+        <div class="product-content">
+          <div class="product-info-top">
+            <p class="product-category">${p.category}</p>
+            <p class="product-name">${p.name}</p>
+            <p class="product-price">${p.price}</p>
+          </div>
+          <div class="product-actions">
+            <button class="btn-add"
+              data-track="add_to_cart_${trackName}"
+              onclick="addCart('${p.name}','${p.price}','${imgEscaped}')">
+              Add to Cart
+            </button>
+            <button class="btn-buy"
+              data-track="buy_now_${trackName}"
+              onclick="buyNow('${p.name}','${p.price}','${imgEscaped}')">
+              Buy Now
+            </button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  </script>
+
+  <script src="cf-analytics.js" data-api-url="http://localhost:5000"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

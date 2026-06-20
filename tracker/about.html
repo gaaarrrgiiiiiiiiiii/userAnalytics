@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescendo — About Us</title>
+  <link rel="stylesheet" href="styles.css?v=1781994857.6181934" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">CRESCENDO</a>
+    <div class="nav-links">
+      <a href="index.html" data-track="nav_home">Home</a>
+      <a href="products.html" data-track="nav_products">Products</a>
+      <a href="about.html" class="active" data-track="nav_about">About</a>
+      <a href="contact.html" data-track="nav_contact">Find us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart" id="cart-link" data-track="nav_cart"><i data-lucide="shopping-cart" style="width:16px;height:16px;"></i> <span id="cart-count">0</span></a>
+      <a href="products.html" class="nav-btn" data-track="nav_buy_template">Buy Template</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>About Crescendo</h1>
+      <p>We're a demo e-commerce store built to showcase the analytics tracker. Every interaction on this site is being tracked.</p>
+    </div>
+
+    <!-- Mission -->
+    <div class="form-card" style="margin-bottom:24px; max-width:100%;">
+      <p class="section-label" style="margin-bottom:12px; font-weight:600; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">Our Mission</p>
+      <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;">Understand users, not just numbers.</h2>
+      <p style="color:var(--muted);line-height:1.75;font-size:0.9rem;">
+        We believe that every click tells a story. By tracking real user behaviour — page views, clicks, scroll depth, and form submissions — businesses can understand the full customer journey and make data-driven decisions that actually move the needle.
+      </p>
+      <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;">
+        <a href="products.html" class="btn-primary" data-track="about_shop_now">Browse Products</a>
+        <a href="contact.html" class="btn-ghost" style="color:var(--text);border-color:var(--border);" data-track="about_contact">Get in Touch</a>
+      </div>
+    </div>
+
+    <!-- Info Block -->
+    <div class="info-block">
+      <h2>Experience Streamlined<br/>Shopping With Crescendo</h2>
+      <div class="info-features">
+        <div class="info-feature">
+          <div class="info-feature-icon"><i data-lucide="truck"></i></div>
+          <h3>Free Delivery</h3>
+          <p>Get free shipping on all orders over $50 across the country.</p>
+        </div>
+        <div class="info-feature">
+          <div class="info-feature-icon"><i data-lucide="shopping-bag"></i></div>
+          <h3>Self Pickup</h3>
+          <p>Order online and pick up your items at our local stores.</p>
+        </div>
+        <div class="info-feature">
+          <div class="info-feature-icon"><i data-lucide="shield-check"></i></div>
+          <h3>Warranty</h3>
+          <p>Enjoy a 1-year comprehensive warranty on all audio devices.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech stack notice -->
+    <div class="form-card" style="margin-top:32px;background:rgba(74, 107, 243, 0.05); max-width:100%;">
+      <p class="section-label" style="margin-bottom:12px; font-weight:600; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent);">🛠 Tech Stack</p>
+      <p style="color:var(--text);font-size:0.875rem;line-height:1.75;">
+        This demo site is intentionally a multi-page vanilla HTML + CSS site to simulate a real-world scenario where the tracker is embedded as a single <code style="color:var(--accent);font-weight:600;">&lt;script&gt;</code> tag.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 Crescendo Demo</p>
+    <div style="color:var(--muted);font-size:0.8rem;">
+      Built with ♥ for the CausalFunnel Assignment
+    </div>
+  </footer>
+
+  <div id="tracker-badge"><i data-lucide="activity"></i> Analytics Active</div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cf_cart") || "[]");
+    document.getElementById("cart-count").textContent = cart.length;
+  </script>
+
+  <script src="cf-analytics.js" data-api-url="http://localhost:5000"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

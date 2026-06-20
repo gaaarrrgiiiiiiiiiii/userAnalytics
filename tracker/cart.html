@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescendo — Cart</title>
+  <link rel="stylesheet" href="styles.css?v=1781994857.6181934" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">CRESCENDO</a>
+    <div class="nav-links">
+      <a href="index.html" data-track="nav_home">Home</a>
+      <a href="products.html" data-track="nav_products">Products</a>
+      <a href="about.html" data-track="nav_about">About</a>
+      <a href="contact.html" data-track="nav_contact">Find us</a>
+    </div>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart active" id="cart-link" data-track="nav_cart"><i data-lucide="shopping-cart" style="width:16px;height:16px;"></i> <span id="cart-count">0</span></a>
+      <a href="products.html" class="nav-btn" data-track="nav_buy_template">Buy Template</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>Your Cart</h1>
+      <p>Review your items and proceed to checkout.</p>
+    </div>
+
+    <div class="form-card" id="cart-container">
+      <div id="cart-items"></div>
+      <div id="empty-state" style="text-align:center;padding:48px 0;color:var(--muted);display:none;">
+        <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
+        <p style="font-weight:600; color:var(--text);">Your cart is empty</p>
+        <a href="products.html" class="btn-primary" style="margin-top:20px;" data-track="cart_shop_now">Shop Now</a>
+      </div>
+    </div>
+
+    <div class="cart-summary" id="cart-summary">
+      <div>
+        <div style="color:var(--muted);font-size:0.8rem;margin-bottom:4px;">Order Total</div>
+        <div class="cart-total">Total: <span id="cart-total">$ 0.00</span></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn-ghost" style="color:var(--text);border-color:var(--border);" data-track="cart_clear" onclick="clearCart()">Clear Cart</button>
+        <button class="btn-primary" data-track="cart_checkout" onclick="checkout()">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 Crescendo Demo</p>
+    <div style="color:var(--muted);font-size:0.8rem;">
+      Built with ♥ for the CausalFunnel Assignment
+    </div>
+  </footer>
+
+  <div id="tracker-badge"><i data-lucide="activity"></i> Analytics Active</div>
+  <div id="toast"></div>
+
+  <script>
+    // Price map for totalling
+    const PRICE_MAP = {
+      "Earbud Y168A": 270.00,
+      "Pro X168A": 250.00,
+      "Speaker P168A": 240.00,
+      "Wireless Charger 1": 49.99,
+      "Wireless Mouse": 49.99,
+      "Noise-Cancelling Headset": 89.99,
+      "Smart Speaker": 69.99,
+      "USB-C Hub": 29.99,
+    };
+
+    let cart = JSON.parse(localStorage.getItem("cf_cart") || "[]");
+
+    function saveCart() {
+      localStorage.setItem("cf_cart", JSON.stringify(cart));
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    function renderCart() {
+      const container   = document.getElementById("cart-items");
+      const emptyState  = document.getElementById("empty-state");
+      const summaryEl   = document.getElementById("cart-summary");
+      const countEl     = document.getElementById("cart-count");
+      const totalEl     = document.getElementById("cart-total");
+
+      countEl.textContent = cart.length;
+
+      if (cart.length === 0) {
+        container.innerHTML = "";
+        emptyState.style.display  = "block";
+        summaryEl.style.display   = "none";
+        return;
+      }
+
+      emptyState.style.display = "none";
+      summaryEl.style.display  = "flex";
+
+      container.innerHTML = cart.map((item, i) => `
+        <div class="cart-item">
+          <div class="cart-item-emoji"><img src="${item.img}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"/></div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${item.price}</div>
+          </div>
+          <button class="btn-ghost" style="color:var(--red);border-color:var(--border);padding:8px 16px;font-size:0.8rem;" data-track="cart_remove_item"
+            onclick="removeItem(${i})">Remove</button>
+        </div>`).join("");
+
+      const total = cart.reduce((sum, item) => sum + (PRICE_MAP[item.name] || 0), 0);
+      totalEl.textContent = "$ " + total.toFixed(2) + " USD";
+    }
+
+    function removeItem(idx) {
+      const removed = cart.splice(idx, 1);
+      saveCart();
+      renderCart();
+      showToast((removed[0]?.name || "Item") + " removed.");
+    }
+
+    function clearCart() {
+      cart = [];
+      saveCart();
+      renderCart();
+      showToast("Cart cleared.");
+    }
+
+    function checkout() {
+      showToast("✅ Order placed! Redirecting…");
+      setTimeout(() => {
+        cart = [];
+        saveCart();
+        window.location.href = "contact.html";
+      }, 1800);
+    }
+
+    renderCart();
+  </script>
+
+  <script src="cf-analytics.js" data-api-url="http://localhost:5000"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
