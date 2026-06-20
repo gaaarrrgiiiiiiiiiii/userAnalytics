@@ -1,6 +1,6 @@
 "use client";
 
-import { TrackerEvent } from "@/lib/api";
+import { TrackerEvent } from "../lib/api";
 
 interface Props {
   events: TrackerEvent[];

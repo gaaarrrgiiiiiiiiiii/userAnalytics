@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "@/lib/api";
+import { Session } from "../lib/api";
 import Link from "next/link";
 
 interface Props {
